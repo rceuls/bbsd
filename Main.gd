@@ -3,6 +3,7 @@ extends Node
 export (PackedScene) var Mob
 var score
 var denial
+var mobs
 
 func _ready():
 	randomize()
@@ -45,6 +46,10 @@ func _on_MobTimer_timeout():
 	mob.linear_velocity = Vector2(rand_range(mob.min_speed, mob.max_speed), 0)
 	mob.linear_velocity = mob.linear_velocity.rotated(direction)
 
-
 func _on_HUD_start_game():
 	new_game()
+	
+func remove_all_mobs():
+	for child in self.get_children():
+		if (child.has_method("_on_Visibility_screen_exited")):
+			child.queue_free()

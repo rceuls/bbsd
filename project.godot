@@ -29,7 +29,7 @@ deny_everything={
 
 [locale]
 
-translations=PoolStringArray( "res://translations.csv" )
+translations=PoolStringArray(  )
 
 [rendering]
 

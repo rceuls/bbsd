@@ -2,13 +2,20 @@ extends CanvasLayer
 
 signal start_game
 
+func _on_MessageTimer_timeout():
+	$MessageLabel.hide()
+	
+func _on_StartButton_pressed():
+	$StartButton.hide()
+	emit_signal("start_game")
+
 func show_message(text):
 	$MessageLabel.set_text(tr(text))
 	$MessageLabel.show()
 	$MessageTimer.start()
 	
 func show_game_over():
-	show_message("Oh no, you have work now!")
+	show_message("Oh no, you have to work now!")
 	yield($MessageTimer, "timeout")
 	$MessageLabel.text = "Dodge the tickets!"
 	$MessageLabel.show()
@@ -17,10 +24,3 @@ func show_game_over():
 
 func update_score(score):
 	$ScoreLabel.text = str(score)
-
-func _on_MessageTimer_timeout():
-	$MessageLabel.hide()
-	
-func _on_StartButton_pressed():
-	$StartButton.hide()
-	emit_signal("start_game")
