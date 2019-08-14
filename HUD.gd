@@ -14,6 +14,9 @@ func show_message(text):
 	$MessageLabel.show()
 	$MessageTimer.start()
 	
+func show_denial_count(left):
+	$DenialLabel.set_text("Denial: " + str(left))
+	
 func show_game_over():
 	show_message("Oh no, you have to work now!")
 	yield($MessageTimer, "timeout")

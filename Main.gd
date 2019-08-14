@@ -10,7 +10,10 @@ func _ready():
 	
 func _input(event):
 	if event.is_action_pressed("deny_everything"): 
-		remove_all_mobs()
+		if(self.denial != 0):
+			remove_all_mobs()
+			denial -= 1
+			$HUD.show_denial_count(denial)
 
 func _on_Player_hit():
 	$ScoreTimer.stop()
@@ -22,6 +25,7 @@ func new_game():
 	score = 0
 	denial = 3
 	$HUD.update_score(score)
+	$HUD.show_denial_count(denial)
 	$HUD.show_message("Get Ready")
 	$Player.start($StartPosition.position)
 	$StartTimer.start()
@@ -29,6 +33,8 @@ func new_game():
 func _on_StartTimer_timeout():
 	$MobTimer.start();
 	$ScoreTimer.start();
+	denial = 3
+	$HUD.show_denial_count(denial)
 
 func _on_ScoreTimer_timeout():
 	score += 1;
