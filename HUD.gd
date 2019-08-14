@@ -8,9 +8,9 @@ func show_message(text):
 	$MessageTimer.start()
 	
 func show_game_over():
-	show_message("Oh no, you have to write some specs now :(")
+	show_message("Oh no, you have to do some work now :(")
 	yield($MessageTimer, "timeout")
-	$MessageLabel.text = "Dodge the request for requirements!"
+	$MessageLabel.text = "Dodge the tickets!"
 	$MessageLabel.show()
 	yield(get_tree().create_timer(2), 'timeout')
 	$StartButton.show()
