@@ -7,6 +7,10 @@ var mobs
 
 func _ready():
 	randomize()
+	
+func _input(event):
+	if event.is_action_pressed("deny_everything"): 
+		remove_all_mobs()
 
 func _on_Player_hit():
 	$ScoreTimer.stop()
@@ -14,6 +18,7 @@ func _on_Player_hit():
 	$HUD.show_game_over()
 
 func new_game():
+	remove_all_mobs()
 	score = 0
 	denial = 3
 	$HUD.update_score(score)
@@ -48,7 +53,7 @@ func _on_MobTimer_timeout():
 
 func _on_HUD_start_game():
 	new_game()
-	
+
 func remove_all_mobs():
 	for child in self.get_children():
 		if (child.has_method("_on_Visibility_screen_exited")):
