@@ -3,12 +3,12 @@ extends CanvasLayer
 signal start_game
 
 func show_message(text):
-	$MessageLabel.text = text
+	$MessageLabel.set_text(tr(text))
 	$MessageLabel.show()
 	$MessageTimer.start()
 	
 func show_game_over():
-	show_message("Oh no, you have to do some work now :(")
+	show_message("Oh no, you have work now!")
 	yield($MessageTimer, "timeout")
 	$MessageLabel.text = "Dodge the tickets!"
 	$MessageLabel.show()
