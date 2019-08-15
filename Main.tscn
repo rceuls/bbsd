@@ -1,18 +1,87 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
-[ext_resource path="res://Main.gd" type="Script" id=1]
-[ext_resource path="res://Mob.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Mob.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Coffee.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Player.tscn" type="PackedScene" id=3]
 [ext_resource path="res://HUD.tscn" type="PackedScene" id=4]
 
-[sub_resource type="Curve2D" id=1]
+[sub_resource type="GDScript" id=1]
+script/source = "extends Node
+
+export (PackedScene) var Mob
+export (PackedScene) var Coffee
+var score
+var denial
+var mobs
+
+func _ready():
+	randomize()
+	
+func _input(event):
+	if event.is_action_pressed(\"deny_everything\"):
+		if(self.denial != 0):
+			remove_all_mobs()
+			denial -= 1
+			$HUD.show_denial_count(denial)
+
+func _on_Player_hit():
+	$ScoreTimer.stop()
+	$MobTimer.stop()
+	$HUD.show_game_over()
+
+func new_game():
+	score = 0
+	denial = 3
+	$HUD.update_score(score)
+	$HUD.show_denial_count(denial)
+	$HUD.show_message(\"Get Ready\")
+	$Player.start($StartPosition.position)
+	$StartTimer.start()
+	remove_all_mobs()
+
+func _on_StartTimer_timeout():
+	$MobTimer.start();
+	$ScoreTimer.start();
+	denial = 3
+	$HUD.show_denial_count(denial)
+
+func _on_ScoreTimer_timeout():
+	score += 1;
+	$HUD.update_score(score)
+
+func _on_MobTimer_timeout():
+	# Choose a random location on Path2D.
+	$MobPath/MobSpawnLocation.set_offset(randi())
+	
+	var mob = Mob.instance() if randi() % 100 < 90 else Coffee.instance() 
+	add_child(mob)
+    # Set the mob's direction perpendicular to the path direction.
+	var direction = $MobPath/MobSpawnLocation.rotation + PI / 2
+    # Set the mob's position to a random location.
+	mob.position = $MobPath/MobSpawnLocation.position
+    # Add some randomness to the direction.
+	direction += rand_range(-PI / 4, PI / 4)
+	mob.rotation = direction
+    # Set the velocity (speed & direction).
+	mob.linear_velocity = Vector2(rand_range(mob.min_speed, mob.max_speed), 0)
+	mob.linear_velocity = mob.linear_velocity.rotated(direction)
+
+func _on_HUD_start_game():
+	new_game()
+
+func remove_all_mobs():
+	for child in get_tree().get_nodes_in_group(\"objects\"):
+		child.queue_free()"
+
+[sub_resource type="Curve2D" id=2]
 _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1020, 0, 0, 0, 0, 0, 1020, 600, 0, 0, 0, 0, 0, 600, 0, 0, 0, 0, 0, 0 )
 }
 
 [node name="Main" type="Node2D"]
-script = ExtResource( 1 )
-Mob = ExtResource( 2 )
+script = SubResource( 1 )
+Mob = ExtResource( 1 )
+Coffee = ExtResource( 2 )
 
 [node name="Player" parent="." instance=ExtResource( 3 )]
 
@@ -29,7 +98,7 @@ one_shot = true
 position = Vector2( 240, 450 )
 
 [node name="MobPath" type="Path2D" parent="."]
-curve = SubResource( 1 )
+curve = SubResource( 2 )
 
 [node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
 

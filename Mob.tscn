@@ -14,7 +14,9 @@ animations = [ {
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 54.3209, 84.5291 )
 
-[node name="Mob" type="RigidBody2D"]
+[node name="Mob" type="RigidBody2D" groups=[
+"objects",
+]]
 position = Vector2( -10.3933, -13.2279 )
 collision_mask = 0
 gravity_scale = 0.0
@@ -28,7 +30,9 @@ scale = Vector2( 1.5, 1.5 )
 frames = SubResource( 1 )
 animation = "fly"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." groups=[
+"objects",
+]]
 rotation = 0.122173
 shape = SubResource( 2 )
 
