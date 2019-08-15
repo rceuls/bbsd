@@ -9,3 +9,7 @@ func _ready():
 
 func _on_Visibility_screen_exited():
 	queue_free()
+
+func _on_positive():
+	queue_free();
+	return "coffee"
