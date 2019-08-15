@@ -2,9 +2,18 @@ extends Node
 
 export (PackedScene) var Mob
 var score
+var denial
+var mobs
 
 func _ready():
 	randomize()
+	
+func _input(event):
+	if event.is_action_pressed("deny_everything"): 
+		if(self.denial != 0):
+			remove_all_mobs()
+			denial -= 1
+			$HUD.show_denial_count(denial)
 
 func _on_Player_hit():
 	$ScoreTimer.stop()
@@ -12,8 +21,11 @@ func _on_Player_hit():
 	$HUD.show_game_over()
 
 func new_game():
+	remove_all_mobs()
 	score = 0
+	denial = 3
 	$HUD.update_score(score)
+	$HUD.show_denial_count(denial)
 	$HUD.show_message("Get Ready")
 	$Player.start($StartPosition.position)
 	$StartTimer.start()
@@ -21,6 +33,8 @@ func new_game():
 func _on_StartTimer_timeout():
 	$MobTimer.start();
 	$ScoreTimer.start();
+	denial = 3
+	$HUD.show_denial_count(denial)
 
 func _on_ScoreTimer_timeout():
 	score += 1;
@@ -43,6 +57,10 @@ func _on_MobTimer_timeout():
 	mob.linear_velocity = Vector2(rand_range(mob.min_speed, mob.max_speed), 0)
 	mob.linear_velocity = mob.linear_velocity.rotated(direction)
 
-
 func _on_HUD_start_game():
 	new_game()
+
+func remove_all_mobs():
+	for child in self.get_children():
+		if (child.has_method("_on_Visibility_screen_exited")):
+			child.queue_free()
