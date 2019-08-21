@@ -1,6 +1,7 @@
 extends Node
 
 export (PackedScene) var Mob
+export (PackedScene) var Coffee
 var score
 var denial
 var mobs
@@ -9,7 +10,7 @@ func _ready():
 	randomize()
 	
 func _input(event):
-	if event.is_action_pressed("deny_everything"): 
+	if event.is_action_pressed("deny_everything"):
 		if(self.denial != 0):
 			remove_all_mobs()
 			denial -= 1
@@ -43,9 +44,9 @@ func _on_ScoreTimer_timeout():
 func _on_MobTimer_timeout():
 	# Choose a random location on Path2D.
 	$MobPath/MobSpawnLocation.set_offset(randi())
+	
+	var mob = Mob.Instance if randi() % 20 > 1 else Coffee.Instance 
     # Create a Mob instance and add it to the scene.
-	var mob = Mob.instance()
-	add_child(mob)
     # Set the mob's direction perpendicular to the path direction.
 	var direction = $MobPath/MobSpawnLocation.rotation + PI / 2
     # Set the mob's position to a random location.
@@ -62,5 +63,8 @@ func _on_HUD_start_game():
 
 func remove_all_mobs():
 	for child in self.get_children():
-		if (child.has_method("_on_Visibility_screen_exited")):
+		if (is_hostile(child)):
 			child.queue_free()
+
+func is_hostile(node):
+	return node.is_in_group("objects")
