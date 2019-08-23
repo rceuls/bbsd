@@ -8,6 +8,11 @@ func _on_MessageTimer_timeout():
 func _on_StartButton_pressed():
 	$StartButton.hide()
 	emit_signal("start_game")
+	
+func _input(event):
+	if event.is_action_pressed("start"):
+		if($StartButton.is_visible()):
+			_on_StartButton_pressed()
 
 func show_message(text):
 	$MessageLabel.set_text(tr(text))
@@ -27,3 +32,8 @@ func show_game_over():
 
 func update_score(score):
 	$ScoreLabel.text = str(score)
+	
+func show_double_score():
+	$MessageLabel.set_text(tr("DOUBLE SCORE!"))
+	$MessageLabel.show()
+	yield($MessageTimer, "timeout")

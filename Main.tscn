@@ -75,8 +75,8 @@ func remove_all_mobs():
 
 func _on_Player_something_positive(id):
 	score *= 2
-	$HUD.update_score(score)
-"
+	$HUD.show_double_score()
+	$HUD.update_score(score)"
 
 [sub_resource type="Curve2D" id=2]
 _data = {
